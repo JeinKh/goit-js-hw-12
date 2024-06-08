@@ -2,53 +2,147 @@ import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css"
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
-import axios from 'axios';
+//------------------Simple Light box----------------
 
-import { getImages } from './js/pixabay-api.js';
-import { imageTamplate } from './js/render-functions.js';
+const lightbox = new SimpleLightbox(".gallery a", { captionDelay: 250, captionsData: "alt" });
 
-const form = document.querySelector('#search-form');
-const input = document.querySelector('#search-input');
-const loader = document.querySelector('.loader');
-const imageGallery = document.querySelector('.gallery');
+import { getPosts } from './js/pixabay-api.js';
+import { postsTemplate } from './js/render-functions.js';
 
-let imageName = '';
+const selectors = {
+form: document.querySelector('#search-form'),
+input: document.querySelector('#search-input'),
+loader: document.querySelector('.loader'),
+imageGallery: document.querySelector('.gallery'),
+loadMoreBtn: document.querySelector('#load-more-btn'),
+};
 
-form.addEventListener('input', (event) => {
-    imageName = event.target.value.trim();
-});
+selectors.loader.classList.add("hidden");
+selectors.loadMoreBtn.classList.add("hidden");
 
-form.addEventListener('submit', onSubmit);
-async function onSubmit(event) {
+let page = 1;
+let totalHits = 0;
+let query = "";
+
+
+async function handleSubmit(event) {
+
     event.preventDefault();
-    showLoader();
+    selectors.postsGallery.innerHTML = "";
+    page = 1;
 
-    if (imageName === '') {
-    return;
+    query = event.target.elements.searchQuery.value.trim();
+
+    if (!query) {
+        iziToast.info({
+            title: "No data",
+            message: "Please enter a search query"
+        });
+        return;
     }
 
+    selectors.loader.classList.remove("hidden");
+    
+    try {
+        
+        const data = await getPosts(query, page);
+        totalHits = data.totalHits;
 
-    try{
-        const data = await getImages(imageName);
-        if (data.hits.length === 0) {
-        imageGallery.innerHTML = '';
-        return iziToast.error({ ...errorParams });
+        if (totalHits === 0) {
+            iziToast.warning({
+                title: "No result",
+                message: "Sorry, there are no images matching your search query. Please try again!"
+            });
+            selectors.loadMoreBtn.classList.add("hidden");
+        }
 
-        const markup = imageTamplate(data.hits);
-        imageGallery.innerHTML = markup;
+        const markup = postsTemplate(data.hits);
+        selectors.postsGallery.insertAdjacentHTML("beforeend", markup);
         lightbox.refresh();
+
+        if (totalHits > 15) {
+            selectors.loadMoreBtn.classList.remove("hidden");
+        }
+
+    } catch (error) {
+        iziToast.error({
+            title: "Error",
+            message: `Something went wrong. ${error.message}`
+        })
+    } finally {
+        selectors.loader.classList.add("hidden");
+        event.target.reset();
     }
-} catch (error){
-    console.log(error)
-} finally {
-    hideLoader();
 }
+
+selectors.form.addEventListener("submit", handleSubmit);
+
+
+
+
+async function handleLoadMore() {
+    
+    page += 1;
+    selectors.loader.classList.remove("hidden");
+
+
+    try {
+        const data = await getPosts(query, page);
+        const markup = postsTemplate(data.hits);
+        selectors.postsGallery.insertAdjacentHTML("beforeend", markup);
+        lightbox.refresh();
+
+        const item = document.querySelector(".gallery-item");
+        const itemHeight = item.getBoundingClientRect().height;
+        window.scrollBy({
+            left: 0,
+            top: itemHeight * 2,
+            behavior: "smooth"
+        })
+
+        totalHits = data.totalHits;
+
+        if (totalHits <= page * 15) {
+            selectors.loadMoreBtn.classList.add("hidden");
+            iziToast.info({
+                title: 'End of results',
+                message: "We're sorry, but you've reached the end of search results.",
+            });
+        }
+
+    } catch (error) {
+        iziToast.error({
+            title: "Error",
+            message: `Something went wrong. ${error.message}`
+        });
+    } finally {
+        selectors.loader.classList.add('hidden');
+    }
+
 }
+
+selectors.loadMoreBtn.addEventListener("click", handleLoadMore);
+
+// let imageName = '';
+
+
+// form.addEventListener('input', async (event) => {
+//     imageName = event.target.value.trim();
+// });
+
+// form.addEventListener('submit', onSubmit);
+// async function onSubmit(event) {
+//     event.preventDefault();
+//     imageGallery.innerHTML = '';
+//     showLoader();
+
+//     if (imageName === '') {
+//     return;
+//     }
 
 //     getImages(imageName)
 //     .then(data => {
 //         if (data.hits.length === 0) {
-//         imageGallery.innerHTML = '';
 //         return iziToast.error({ ...errorParams });
 //         }
 
@@ -63,28 +157,22 @@ async function onSubmit(event) {
 //     return event.target.reset();
 // }
 
+// //---------------------Loader-----------------------
 
+// async function showLoader() {
+//     loader.style.display = 'inline-block';
+// }
 
-//---------------------Loader-----------------------
+// function hideLoader() {
+//     loader.style.display = 'none';
+// }
 
-function showLoader() {
-    loader.style.display = 'inline-block';
-}
+// //------------------iziToast params----------------
 
-function hideLoader() {
-    loader.style.display = 'none';
-}
-
-//------------------iziToast params----------------
-
-const errorParams = {
-    position: 'topRight',
-    timeout: 1800,
-    maxWidth: 300,
-    icon: 'none',
-    message: 'Sorry, there are no images matching your search query. Please try again!',
-}
-
-//------------------Simple Light box----------------
-
-let lightbox = new SimpleLightbox(".gallery a", { captionDelay: 250, captionsData: "alt" });
+// const errorParams = {
+//     position: 'topRight',
+//     timeout: 1800,
+//     maxWidth: 300,
+//     icon: 'none',
+//     message: 'Sorry, there are no images matching your search query. Please try again!',
+// }

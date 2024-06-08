@@ -1,31 +1,38 @@
-export { getImages }
+export { getPosts }
 
 //----------------------------------
 
-async function getImages(imageName) {
+async function getPosts(searchQuery, page = 1, perPage = 15) {
     const BASE_URL = 'https://pixabay.com/api/';
-    const params = new URLSearchParams({
-    key: '44085737-801aedd726c9c1496368a8656',
-    q: imageName,
-    image_type: 'photo',
-    orientation: 'horizontal',
-    safesearch: true
-    })
+    const API_KEY = '44085737-801aedd726c9c1496368a8656';
+    // const params = new URLSearchParams({
+    // key: '44085737-801aedd726c9c1496368a8656',
+    // q: imageName,
+    // image_type: 'photo',
+    // orientation: 'horizontal',
+    // safesearch: true
+    // })
 
-    const url = `${BASE_URL}?${params}`;
+    const url = `${BASE_URL}`;
 
-    try{
-        const res = await axios.get(url);
-        return res.data;
-    } catch (error){
-        throw new Error(res.statusText);
+    try {
+        const response = await axios(url, {
+            params: {
+                key: API_KEY,
+                q: searchQuery,
+                image_type: "photo",
+                orientation: "horizontal",
+                safesearch: true,
+                page: page,
+                per_page: perPage
+            }
+        });
+        return response.data;
+    } catch (error) {
+        iziToast.error({
+            title: "Error",
+            message: `Something went wrong. ${error.message}`
+        })
     }
 
-    // return fetch(url)
-    // .then(res => {
-    //     if (!res.ok) {
-    //     throw new Error(res.statusText);
-    //     }
-    //     return res.json();
-    // })
-}
+};
