@@ -6,8 +6,8 @@ import "simplelightbox/dist/simple-lightbox.min.css";
 
 const lightbox = new SimpleLightbox(".gallery a", { captionDelay: 250, captionsData: "alt" });
 
-import { getPosts } from './js/pixabay-api.js';
-import { postsTemplate } from './js/render-functions.js';
+import { getPosts } from "./js/pixabay-api";
+import { postsTemplate } from "./js/render-functions";
 
 const selectors = {
 form: document.querySelector('#search-form'),
