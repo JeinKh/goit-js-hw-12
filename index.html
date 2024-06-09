@@ -7,17 +7,18 @@
     <title>HW 12</title>
     
     <script type="module" crossorigin src="/goit-hw-js-12/commonHelpers.js"></script>
-    <link rel="modulepreload" crossorigin href="/goit-hw-js-12/assets/vendor-8c59ed88.js">
+    <link rel="modulepreload" crossorigin href="/goit-hw-js-12/assets/vendor-c493984e.js">
     <link rel="stylesheet" href="/goit-hw-js-12/assets/vendor-1cd1f9d9.css">
-    <link rel="stylesheet" href="/goit-hw-js-12/assets/index-00d5a8c6.css">
+    <link rel="stylesheet" href="/goit-hw-js-12/assets/index-4f755dbb.css">
   </head>
   <body>
     <form id="search-form" class="search-form">
-      <input type="text" id="search-input" class="search-input" placeholder="Search images...">
+      <input type="text" name="searchQuery"  id="search-input" class="search-input" autocomplete="off" placeholder="Search images...">
       <button class="button" type="submit">Search</button>
     </form>
     <div class="loader">Loading images, please wait...</div>
-    <div class="gallery"></div>
+    <ul class="gallery"></ul>
+    <button id="load-more-btn">Load more</button>
     
   </body>
 </html>
