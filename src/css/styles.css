@@ -167,3 +167,7 @@ body {
 #load-more-btn:hover {
   background-color: #444;
 }
+
+.hidden {
+  display: none;
+} 

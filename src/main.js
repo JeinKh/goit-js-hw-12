@@ -13,7 +13,7 @@ const selectors = {
 form: document.querySelector('#search-form'),
 input: document.querySelector('#search-input'),
 loader: document.querySelector('.loader'),
-imageGallery: document.querySelector('.gallery'),
+postsGallery: document.querySelector('.gallery'),
 loadMoreBtn: document.querySelector('#load-more-btn'),
 };
 
@@ -123,56 +123,3 @@ async function handleLoadMore() {
 
 selectors.loadMoreBtn.addEventListener("click", handleLoadMore);
 
-// let imageName = '';
-
-
-// form.addEventListener('input', async (event) => {
-//     imageName = event.target.value.trim();
-// });
-
-// form.addEventListener('submit', onSubmit);
-// async function onSubmit(event) {
-//     event.preventDefault();
-//     imageGallery.innerHTML = '';
-//     showLoader();
-
-//     if (imageName === '') {
-//     return;
-//     }
-
-//     getImages(imageName)
-//     .then(data => {
-//         if (data.hits.length === 0) {
-//         return iziToast.error({ ...errorParams });
-//         }
-
-//         const markup = imageTamplate(data.hits);
-//         imageGallery.innerHTML = markup;
-//         lightbox.refresh();
-//     })
-//     .catch(error => console.log(error))
-//     .finally(() => {
-//         hideLoader();
-//     });
-//     return event.target.reset();
-// }
-
-// //---------------------Loader-----------------------
-
-// async function showLoader() {
-//     loader.style.display = 'inline-block';
-// }
-
-// function hideLoader() {
-//     loader.style.display = 'none';
-// }
-
-// //------------------iziToast params----------------
-
-// const errorParams = {
-//     position: 'topRight',
-//     timeout: 1800,
-//     maxWidth: 300,
-//     icon: 'none',
-//     message: 'Sorry, there are no images matching your search query. Please try again!',
-// }

@@ -1,5 +1,7 @@
+import axios from "axios";
+import iziToast from "izitoast";
+import "izitoast/dist/css/iziToast.min.css";
 export { getPosts }
-
 //----------------------------------
 
 async function getPosts(searchQuery, page = 1, perPage = 15) {
