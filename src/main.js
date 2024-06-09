@@ -68,7 +68,7 @@ async function handleSubmit(event) {
         iziToast.error({
             title: "Error",
             message: `Something went wrong. ${error.message}`
-        })
+        });
     } finally {
         selectors.loader.classList.add("hidden");
         event.target.reset();
@@ -102,7 +102,7 @@ async function handleLoadMore() {
 
         totalHits = data.totalHits;
 
-        if (totalHits <= page * 15) {
+        if (data.hits.length < 15 || totalHits <= page * 15) {
             selectors.loadMoreBtn.classList.add("hidden");
             iziToast.info({
                 title: 'End of results',

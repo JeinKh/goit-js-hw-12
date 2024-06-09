@@ -100,7 +100,7 @@ body {
   margin-bottom: 40px;
 }
 
-.link {
+.gallery-link {
   position: relative;
   display: flex;
   justify-content: center;
@@ -168,6 +168,6 @@ body {
   background-color: #444;
 }
 
-.hidden {
+#load-more-btn.hidden {
   display: none;
 } 
