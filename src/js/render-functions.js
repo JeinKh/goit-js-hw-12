@@ -17,6 +17,6 @@ function createMarkup({ webformatURL, largeImageURL, tags, likes, views, comment
     `;
 }
 
- export function postsTamplate(arr) {
+ export function postsTemplate(arr) {
     return arr.map(createMarkup).join('');
  }
