@@ -1,4 +1,4 @@
-// export { postsTamplate };
+
 //----------------------------------
 
 function createMarkup({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) {
@@ -17,6 +17,8 @@ function createMarkup({ webformatURL, largeImageURL, tags, likes, views, comment
     `;
 }
 
-export function postsTamplate(arr) {
+function postsTamplate(arr) {
     return arr.map(createMarkup).join('');
 }
+
+export { postsTamplate };
